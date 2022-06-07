@@ -11,7 +11,6 @@ Find all stacks in an AWS account and run drift detection on each. Produce a CSV
 Usage: drift_summary.sh
 Find all running stacks and produce drift summaries
 ```
-
 ## drift_diff.py
 
 Take the output of Sceptre drift detection and present the actual diffs as in unified diff format.
@@ -22,7 +21,6 @@ Usage:
   sceptre-fx var_file.yaml detect-stack-drift > drift.yml
   drift_diff.py drift.yml
 ```
-
 ## drift_report.sh
 
 Given either a stack_name (slow) or a var file, automate detecting drift on that stack and then producing a drift diff.
@@ -32,4 +30,12 @@ Given either a stack_name (slow) or a var file, automate detecting drift on that
 Usage: drift_report.sh [-v VAR_FILE] [-s STACK_NAME -p SEARCH_PATH] [-h]
 produce drift summary based on either a
 var file or a stack name and search path pair
+```
+## change_sets.sh
+
+Automate the process of generating a change set and then producing the JSON description of its proposed diffs.
+
+```text
+▶ bash change_sets.sh -h
+Usage: change_sets.sh VAR_FILE [-h]
 ```

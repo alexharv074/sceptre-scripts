@@ -2,29 +2,20 @@
 
 This repo contains helpers for Sceptre specifically for analysing stack drifts.
 
-## drift_summary.sh
+<%- doc_map = {
+  "drift_summary.sh": "Find all stacks in an AWS account and run drift detection on each. Produce a CSV-formatted summary that can be opened in Excel",
+  "drift_diff.py": "Take the output of Sceptre drift detection and present the actual diffs as in unified diff format",
+  "drift_report.sh": "Given either a stack_name (slow) or a var file, automate detecting drift on that stack and then producing a drift diff",
+  "change_sets.sh": "Automate the process of generating a change set and then producing the JSON description of its proposed diffs",
+} -%>
+<%- doc_map.each do |key, val| -%>
+<%- if key =~ /\.py/ ; prog = "python" ; else ; prog = "bash" ; end -%>
+## <%= key %>
 
-Find all stacks in an AWS account and run drift detection on each. Produce a CSV-formatted summary that can be opened in Excel.
-
-```text
-▶ bash drift_summary.sh -h
-<%= %x{bash drift_summary.sh -h} -%>
-```
-
-## drift_diff.py
-
-Take the output of Sceptre drift detection and present the actual diffs as in unified diff format.
-
-```text
-▶ python drift_diff.py -h
-<%= %x{python drift_diff.py -h} -%>
-```
-
-## drift_report.sh
-
-Given either a stack_name (slow) or a var file, automate detecting drift on that stack and then producing a drift diff.
+<%= val %>.
 
 ```text
-▶ bash drift_report.sh -h
-<%= %x{bash drift_report.sh -h} -%>
+▶ <%= prog %> <%= key %> -h
+<%= %x{#{prog} #{key} -h} -%>
 ```
+<%- end -%>
