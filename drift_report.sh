@@ -89,26 +89,42 @@ _var_file() {
   exit 1
 }
 
-_stack_name() {
-  stack_name="$(sceptre-fx "$var_file" stack-name | yq -r '.[]')"
+_stack_names() {
+  read -ra stack_names <<< "$(sceptre-fx "$var_file" stack-name | yq -r '. | join(" ")')"
 }
 
 detect_drift() {
   sceptre-fx "$var_file" detect-stack-drift
 }
 
+extract_yaml() {
+  python -c "\
+import sys
+file_name = sys.argv[1]
+num = int(sys.argv[2])
+with open(file_name, 'r') as file_handle:
+  data = file_handle.read()
+print('---\n' + data.split('---')[num])" "$1" "$2"
+}
+
 main() {
+  local doc stack_name drift_file
+
   get_opts "$@"
 
   [[ -z "$var_file" ]] && _var_file
-  [[ -z "$stack_name" ]] && _stack_name
+  [[ -z "$stack_name" ]] && _stack_names
 
-  drift_yml="$stack_name".drift.yml
-  drift_diff="$stack_name".drift.diff
-  detect_drift > "$drift_yml"
-  drift_diff.py "$drift_yml" > "$drift_diff"
+  drift_file = /tmp/drift_file."$$"
+  detect_drift > "$drift_file"
 
-  echo "Output is $drift_diff"
+  doc=1 ; for stack_name in "${stack_names[@]}" ; do
+    drift_yml="$stack_name".drift.yml
+    drift_diff="$stack_name".drift.diff
+    extract_yaml "$drift_file" "$doc" > "$drift_yml"
+    drift_diff.py "$drift_yml" > "$drift_diff"
+    echo "Output is $drift_diff" ; ((doc++))
+  done
 }
 
 main "$@"
