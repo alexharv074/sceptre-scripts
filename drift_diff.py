@@ -37,6 +37,9 @@ def drift_diffs(docs):
     for stack_name, data in docs.items():
         header_printed = False
 
+        if "StackResourceDriftStatus" in data:
+            continue
+
         for drift in data["StackResourceDrifts"]:
 
             idx      = drift["LogicalResourceId"]

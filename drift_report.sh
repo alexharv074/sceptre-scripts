@@ -99,12 +99,20 @@ detect_drift() {
 
 extract_yaml() {
   python -c "\
-import sys
+import sys, yaml
+
 file_name = sys.argv[1]
-num = int(sys.argv[2])
+key = sys.argv[2]
+
 with open(file_name, 'r') as file_handle:
-  data = file_handle.read()
-print('---\n' + data.split('---')[num])" "$1" "$2"
+  stream = file_handle.read()
+
+for doc in stream.split('---')[1:]:
+  data = yaml.safe_load(doc)
+  keys = list(data.keys())
+  stack_name = keys[0]
+  if key == keys[0]:
+    print('---\n' + doc)" "$1" "$2"
 }
 
 main() {
@@ -115,15 +123,15 @@ main() {
   [[ -z "$var_file" ]] && _var_file
   [[ -z "$stack_name" ]] && _stack_names
 
-  drift_file = /tmp/drift_file."$$"
+  drift_file=/tmp/drift_file."$$"
   detect_drift > "$drift_file"
 
-  doc=1 ; for stack_name in "${stack_names[@]}" ; do
+  for stack_name in "${stack_names[@]}" ; do
     drift_yml="$stack_name".drift.yml
     drift_diff="$stack_name".drift.diff
-    extract_yaml "$drift_file" "$doc" > "$drift_yml"
+    extract_yaml "$drift_file" "$stack_name" > "$drift_yml"
     drift_diff.py "$drift_yml" > "$drift_diff"
-    echo "Output is $drift_diff" ; ((doc++))
+    echo "Output is $drift_diff"
   done
 }
 
