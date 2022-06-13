@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "Usage: $0 [-v VAR_FILE] [-s STACK_NAME -p SEARCH_PATH] [-h]"
+  echo "Usage: [DRIFT_REPORT_PATH=search_path] $0 [-v VAR_FILE] [-s STACK_NAME [-p SEARCH_PATH]] [-h]"
   echo "produce drift summary based on either a"
   echo "var file or a stack name and search path pair"
   exit 1
@@ -37,6 +37,9 @@ _path_not_set() {
 
 get_opts() {
   local OPTARG OPTIND opt
+
+  [[ -n "$DRIFT_REPORT_PATH" ]] && \
+    search_path="$DRIFT_REPORT_PATH"
 
   while getopts "v:s:p:h" opt ; do
     case "$opt" in
