@@ -11,7 +11,7 @@ _check_commands() {
   local cmd
   local not_found=0
   for cmd in "drift_diff.py" "yq" ; do
-    if ! command -v "$cmd" ; then
+    if ! command -v "$cmd" > /dev/null ; then
       echo "$cmd not not_found in path"
       ((not_found++))
     fi
