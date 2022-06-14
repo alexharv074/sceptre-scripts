@@ -45,7 +45,7 @@ get_opts() {
     case "$opt" in
       h) usage ;;
       v) var_file="$OPTARG" ;;
-      s) stack_name="$OPTARG" ;;
+      s) stack_names=("$OPTARG") ;;
       p) search_path="$OPTARG" ;;
       \?) echo "ERROR: Invalid option -$OPTARG"
           usage ;;
@@ -56,14 +56,14 @@ get_opts() {
   _check_commands
 
   [[ -z "$var_file" ]] && \
-    [[ -z "$stack_name" ]] && \
+    [[ -z "$stack_names" ]] && \
       _param_not_set
 
   [[ -n "$var_file" ]] && \
-    [[ -n "$stack_name" ]] && \
+    [[ -n "$stack_names" ]] && \
       _both_params_set
 
-  [[ -n "$stack_name" ]] && \
+  [[ -n "$stack_names" ]] && \
     [[ -z "$search_path" ]] && \
       _path_not_set
 
@@ -74,13 +74,13 @@ _var_file() {
   local file_name
   local pipe="pipe.$$"
 
-  echo "Finding var file for $stack_name"
+  echo "Finding var file for $stack_names"
 
   mkfifo "$pipe"
   find "$search_path" -name "*.yaml" > "$pipe" &
 
   while read -r file_name ; do
-    if sceptre-fx "$file_name" stack-name 2> /dev/null | yq -r '.[]' | grep -qw "$stack_name" ; then
+    if sceptre-fx "$file_name" stack-name 2> /dev/null | yq -r '.[]' | grep -qw "$stack_names" ; then
       var_file="$file_name"
       echo "Using $var_file"
       return
