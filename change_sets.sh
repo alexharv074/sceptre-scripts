@@ -56,6 +56,7 @@ create_change_set_diff() {
 
 main() {
   [[ -z "$1" ]] && usage
+  [[ "$1" = "-h" ]] && usage
   var_file="$1"
   create_change_set_diff
 }

@@ -27,7 +27,7 @@ Given either a stack_name (slow) or a var file, automate detecting drift on that
 
 ```text
 ▶ bash drift_report.sh -h
-Usage: drift_report.sh [-v VAR_FILE] [-s STACK_NAME -p SEARCH_PATH] [-h]
+Usage: [DRIFT_REPORT_PATH=search_path] drift_report.sh [-v VAR_FILE] [-s STACK_NAME [-p SEARCH_PATH]] [-h]
 produce drift summary based on either a
 var file or a stack name and search path pair
 ```
@@ -38,4 +38,12 @@ Automate the process of generating a change set and then producing the JSON desc
 ```text
 ▶ bash change_sets.sh -h
 Usage: change_sets.sh VAR_FILE [-h]
+```
+## iam_roles.sh
+
+Compute IAM roles for iam-generic stack.
+
+```text
+▶ bash iam_roles.sh -h
+Usage: iam_roles.sh [-h]
 ```
