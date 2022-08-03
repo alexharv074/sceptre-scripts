@@ -7,6 +7,7 @@ This repo contains helpers for Sceptre specifically for analysing stack drifts.
   "drift_diff.py": "Take the output of Sceptre drift detection and present the actual diffs as in unified diff format",
   "drift_report.sh": "Given either a stack_name (slow) or a var file, automate detecting drift on that stack and then producing a drift diff",
   "change_sets.sh": "Automate the process of generating a change set and then producing the JSON description of its proposed diffs",
+  "iam_roles.sh": "Compute IAM roles for iam-generic stack"
 } -%>
 <%- doc_map.each do |key, val| -%>
 <%- if key =~ /\.py/ ; prog = "python" ; else ; prog = "bash" ; end -%>
